@@ -1,11 +1,13 @@
 package co.edu.unbosque.wines.entity;
 
-import co.edu.unbosque.wines.enums.*;
+
 import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 @Table(name = "region_metrics")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
@@ -45,9 +47,8 @@ public class RegionMetric {
     @Column(name = "avg_price_usd", precision = 8, scale = 2)
     private BigDecimal avgPriceUsd;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "price_range")
-    private PriceRange priceRange;
+    private String priceRange;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dominant_grape_id")
@@ -56,9 +57,8 @@ public class RegionMetric {
     @Column(name = "best_vintage_year")
     private Integer bestVintageYear;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "prestige_index")
-    private PrestigeIndex prestigeIndex;
+    private String prestigeIndex;
 
     @Column(name = "medal_count", nullable = false)
     private Integer medalCount;

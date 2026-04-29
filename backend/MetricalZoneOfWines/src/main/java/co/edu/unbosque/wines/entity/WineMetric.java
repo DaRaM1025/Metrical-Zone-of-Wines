@@ -1,11 +1,13 @@
 package co.edu.unbosque.wines.entity;
 
-import co.edu.unbosque.wines.enums.*;
+
 import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 @Table(name = "wine_metrics")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
@@ -39,7 +41,6 @@ public class WineMetric {
     @Column(name = "medal_count", nullable = false)
     private Integer medalCount;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "prestige_index")
-    private PrestigeIndex prestigeIndex;
+    private String prestigeIndex;
 }

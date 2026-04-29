@@ -1,9 +1,10 @@
 package co.edu.unbosque.wines.entity;
 
-import co.edu.unbosque.wines.enums.*;
 import jakarta.persistence.*;
 import lombok.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 @Table(name = "grape_varieties")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
@@ -15,8 +16,8 @@ public class GrapeVariety {
     @Column(nullable = false, length = 100, unique = true)
     private String name;
 
-    @Enumerated(EnumType.STRING)
-    private GrapeColor color;
+    @Column(name = "color")
+    private String color;
 
     @Column(name = "origin_country", length = 100)
     private String originCountry;

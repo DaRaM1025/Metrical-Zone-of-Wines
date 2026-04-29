@@ -1,10 +1,12 @@
 package co.edu.unbosque.wines.entity;
 
-import co.edu.unbosque.wines.enums.*;
+
 import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 @Table(name = "wines")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
@@ -23,9 +25,8 @@ public class Wine {
     @Column(name = "vintage_year")
     private Integer vintageYear;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "wine_type")
-    private WineType wineType;
+    private String wineType;
 
     @Column(name = "alcohol_pct", precision = 4, scale = 2)
     private BigDecimal alcoholPct;
@@ -33,9 +34,8 @@ public class Wine {
     @Column(name = "avg_price_usd", precision = 8, scale = 2)
     private BigDecimal avgPriceUsd;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "price_range")
-    private PriceRange priceRange;
+    private String priceRange;
 
     @Column(name = "production_bottles")
     private Integer productionBottles;
@@ -43,9 +43,8 @@ public class Wine {
     @Column(name = "aging_months")
     private Integer agingMonths;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "aging_vessel")
-    private AgingVessel agingVessel;
+    private String agingVessel;
 
     @Column(name = "natural_wine", nullable = false)
     private Boolean naturalWine;

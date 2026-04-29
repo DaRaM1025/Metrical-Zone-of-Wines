@@ -1,10 +1,12 @@
 package co.edu.unbosque.wines.entity;
 
-import co.edu.unbosque.wines.enums.*;
+
 import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 @Table(name = "vineyards")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
@@ -32,17 +34,14 @@ public class Vineyard {
     @Column(name = "altitude_avg_m")
     private Integer altitudeAvgM;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "soil_type")
-    private SoilType soilType;
+    private String soilType;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "irrigation_type")
-    private IrrigationType irrigationType;
+    private String irrigationType;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "harvest_season")
-    private HarvestSeason harvestSeason;
+    private String harvestSeason;
 
     @Column(precision = 9, scale = 6)
     private BigDecimal lat;

@@ -1,11 +1,13 @@
 package co.edu.unbosque.wines.entity;
 
-import co.edu.unbosque.wines.enums.*;
+
 import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 @Table(name = "vineyard_metrics")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
@@ -42,25 +44,23 @@ public class VineyardMetric {
     @Column(name = "avg_price_usd", precision = 8, scale = 2)
     private BigDecimal avgPriceUsd;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "price_range")
-    private PriceRange priceRange;
+    private String priceRange;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dominant_grape_id")
     private GrapeVariety dominantGrape;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "prestige_index")
-    private PrestigeIndex prestigeIndex;
+    private String prestigeIndex;
 
     @Column(name = "medal_count", nullable = false)
     private Integer medalCount;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "top_wine_type")
-    private WineType topWineType;
+    private String topWineType;
 
     @Column(name = "avg_aging_months", precision = 5, scale = 2)
     private BigDecimal avgAgingMonths;
+
 }

@@ -3,7 +3,9 @@ package co.edu.unbosque.wines.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 @Table(name = "wine_grapes")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder

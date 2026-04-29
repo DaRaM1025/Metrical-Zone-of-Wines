@@ -1,0 +1,173 @@
+###############################################################################
+# GUÍA DE PRUEBAS - API METRICAL ZONE OF WINES
+# BASE URL: http://localhost:14080
+###############################################################################
+
+Este archivo contiene los cuerpos (Body) y métodos probados y funcionando para
+cada endpoint.
+
+RECOMENDACIONES GENERALES:
+- Los Enums se mandan como STRING (Ej: "French oak", "Red", "Legendary").
+- Ojo con los campos obligatorios como 'medalCount' en las métricas.
+- Para relaciones, manden el objeto con su ID (Ej: "country": { "id": 1 }).
+
+-------------------------------------------------------------------------------
+1. PAÍSES (Country)
+-------------------------------------------------------------------------------
+MÉTODO: POST
+URL: /api/countries
+BODY:
+{
+  "name": "South Africa",
+  "code": "ZA"
+}
+
+-------------------------------------------------------------------------------
+2. VARIEDAD DE UVA (GrapeVariety)
+-------------------------------------------------------------------------------
+MÉTODO: POST
+URL: /api/grape-varieties
+BODY:
+{
+  "name": "Pinotage",
+  "color": "Red",
+  "originCountry": "South Africa"
+}
+
+-------------------------------------------------------------------------------
+3. REGIONES (Region)
+-------------------------------------------------------------------------------
+MÉTODO: POST
+URL: /api/regions
+BODY:
+{
+  "name": "Stellenbosch",
+  "description": "Famosa por sus tintos de gran calidad.",
+  "climateType": "Mediterranean",
+  "wineStyleProfile": "Bold reds",
+  "country": { "id": 9 }
+}
+
+-------------------------------------------------------------------------------
+4. MÉTRICAS DE REGIÓN (RegionMetric)
+-------------------------------------------------------------------------------
+MÉTODO: POST
+URL: /api/region-metrics
+BODY:
+{
+  "totalVineyards": 50,
+  "totalWines": 200,
+  "totalReviews": 5000,
+  "avgScore": 91.5,
+  "avgPriceUsd": 45.0,
+  "priceRange": "Mid",
+  "prestigeIndex": "Acclaimed",
+  "medalCount": 10,
+  "region": { "id": 10 }
+}
+
+-------------------------------------------------------------------------------
+5. VIÑEDOS (Vineyard)
+-------------------------------------------------------------------------------
+MÉTODO: POST
+URL: /api/vineyards
+BODY:
+{
+  "name": "Kanunkop Estate",
+  "owner": "Johann Krige",
+  "foundedYear": 1973,
+  "hectares": 125.0,
+  "altitudeAvgM": 180,
+  "soilType": "Granite",
+  "irrigationType": "Dry farming",
+  "harvestSeason": "Autumn",
+  "lat": -33.8512,
+  "lng": 18.8723,
+  "region": { "id": 10 }
+}
+
+-------------------------------------------------------------------------------
+6. VINOS (Wine)
+-------------------------------------------------------------------------------
+MÉTODO: POST
+URL: /api/wines
+BODY:
+{
+  "name": "Black Label Pinotage",
+  "vintageYear": 2021,
+  "wineType": "Red",
+  "alcoholPct": 14.5,
+  "avgPriceUsd": 80.0,
+  "priceRange": "Premium",
+  "productionBottles": 10000,
+  "agingMonths": 18,
+  "agingVessel": "French oak",
+  "naturalWine": false,
+  "description": "Un vino premium con crianza en roble.",
+  "vineyard": { "id": 12 }
+}
+
+-------------------------------------------------------------------------------
+7. MÉTRICAS DE VIÑEDO (VineyardMetric)
+-------------------------------------------------------------------------------
+MÉTODO: POST
+URL: /api/vineyard-metrics
+BODY:
+{
+  "totalWines": 10,
+  "totalReviews": 2000,
+  "avgScore": 94.0,
+  "avgPriceUsd": 65.0,
+  "priceRange": "Premium",
+  "prestigeIndex": "Legendary",
+  "medalCount": 5,
+  "vineyard": { "id": 12 }
+}
+
+-------------------------------------------------------------------------------
+8. MEZCLA DE UVAS (WineGrape - Tabla Pivote)
+-------------------------------------------------------------------------------
+MÉTODO: POST
+URL: /api/wine-grapes
+BODY:
+{
+  "id": {
+    "wineId": 15,
+    "grapeId": 12
+  },
+  "wine": {
+    "id": 15
+  },
+  "grape": {
+    "id": 12
+  },
+  "percentage": 100.0
+}
+
+-------------------------------------------------------------------------------
+9. MÉTRICAS DE VINO (WineMetric)
+-------------------------------------------------------------------------------
+MÉTODO: POST
+URL: /api/wine-metrics
+BODY:
+{
+  "totalReviews": 500,
+  "avgScore": 94.5,
+  "topScore": 97.0,
+  "avgExpertScore": 95.0,
+  "avgConsumerScore": 94.0,
+  "medalCount": 3,
+  "prestigeIndex": "Legendary",
+  "wine": { "id": 15 }
+}
+
+-------------------------------------------------------------------------------
+10. CONSULTAS (GET)
+-------------------------------------------------------------------------------
+Para ver los datos guardados:
+- GET /api/wines
+- GET /api/wine-grapes/wine/{wineId}
+- GET /api/wine-metrics
+- GET /api/countries
+- GET /api/regions
+###############################################################################
