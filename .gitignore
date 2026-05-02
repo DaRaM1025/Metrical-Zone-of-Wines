@@ -35,6 +35,8 @@ logs/
 
 # Environment
 .env
+.env.prod
+app.pid
 application-local.yml
 
 # Build
