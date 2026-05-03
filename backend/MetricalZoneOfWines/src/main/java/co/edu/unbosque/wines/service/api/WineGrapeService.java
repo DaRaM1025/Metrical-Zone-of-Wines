@@ -1,14 +1,14 @@
 package co.edu.unbosque.wines.service.api;
 
-import co.edu.unbosque.wines.entity.WineGrape;
+import co.edu.unbosque.wines.dto.WineGrapeDTO;
 import co.edu.unbosque.wines.entity.WineGrapeId;
 import java.util.List;
 
 public interface WineGrapeService {
-    List<WineGrape> findAll();
-    WineGrape findById(WineGrapeId id);
-    WineGrape save(WineGrape wineGrape);
+    List<WineGrapeDTO> findAll();
+    WineGrapeDTO findById(WineGrapeId id);
+    WineGrapeDTO save(WineGrapeDTO wineGrapeDTO);
     void deleteById(WineGrapeId id);
-    List<WineGrape> findByWineId(Integer wineId);
-    List<WineGrape> findByGrapeId(Integer grapeId);
+    List<WineGrapeDTO> findByWineId(Integer wineId);
+    List<WineGrapeDTO> findByGrapeId(Integer grapeId);
 }

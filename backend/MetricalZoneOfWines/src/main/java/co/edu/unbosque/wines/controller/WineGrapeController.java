@@ -1,6 +1,6 @@
 package co.edu.unbosque.wines.controller;
 
-import co.edu.unbosque.wines.entity.WineGrape;
+import co.edu.unbosque.wines.dto.WineGrapeDTO;
 import co.edu.unbosque.wines.entity.WineGrapeId;
 import co.edu.unbosque.wines.service.api.WineGrapeService;
 import lombok.RequiredArgsConstructor;
@@ -18,30 +18,36 @@ public class WineGrapeController {
     private final WineGrapeService wineGrapeService;
 
     @GetMapping
-    public ResponseEntity<List<WineGrape>> getAll() {
+    public ResponseEntity<List<WineGrapeDTO>> getAll() {
         return ResponseEntity.ok(wineGrapeService.findAll());
     }
 
     @GetMapping("/{wineId}/{grapeId}")
-    public ResponseEntity<WineGrape> getById(@PathVariable Integer wineId, @PathVariable Integer grapeId) {
+    public ResponseEntity<WineGrapeDTO> getById(@PathVariable Integer wineId, @PathVariable Integer grapeId) {
         WineGrapeId id = new WineGrapeId(wineId, grapeId);
         return ResponseEntity.ok(wineGrapeService.findById(id));
     }
 
     @GetMapping("/wine/{wineId}")
-    public ResponseEntity<List<WineGrape>> getByWineId(@PathVariable Integer wineId) {
+    public ResponseEntity<List<WineGrapeDTO>> getByWineId(@PathVariable Integer wineId) {
         return ResponseEntity.ok(wineGrapeService.findByWineId(wineId));
     }
 
     @PostMapping
-    public ResponseEntity<WineGrape> create(@RequestBody WineGrape wineGrape) {
-        return new ResponseEntity<>(wineGrapeService.save(wineGrape), HttpStatus.CREATED);
+    public ResponseEntity<WineGrapeDTO> create(@RequestBody WineGrapeDTO wineGrapeDTO) {
+        return new ResponseEntity<>(wineGrapeService.save(wineGrapeDTO), HttpStatus.CREATED);
     }
 
     @PutMapping("/{wineId}/{grapeId}")
-    public ResponseEntity<WineGrape> update(@PathVariable Integer wineId, @PathVariable Integer grapeId, @RequestBody WineGrape wineGrape) {
-        wineGrape.setId(new WineGrapeId(wineId, grapeId));
-        return ResponseEntity.ok(wineGrapeService.save(wineGrape));
+    public ResponseEntity<WineGrapeDTO> update(@PathVariable Integer wineId, @PathVariable Integer grapeId, @RequestBody WineGrapeDTO wineGrapeDTO) {
+        // Aseguramos que el JSON mantenga coherencia con la URL
+        if (wineGrapeDTO.getWine() == null) {
+            wineGrapeDTO.setWine(co.edu.unbosque.wines.dto.WineDTO.builder().id(wineId).build());
+        }
+        if (wineGrapeDTO.getGrape() == null) {
+            wineGrapeDTO.setGrape(co.edu.unbosque.wines.dto.GrapeVarietyDTO.builder().id(grapeId).build());
+        }
+        return ResponseEntity.ok(wineGrapeService.save(wineGrapeDTO));
     }
 
     @DeleteMapping("/{wineId}/{grapeId}")

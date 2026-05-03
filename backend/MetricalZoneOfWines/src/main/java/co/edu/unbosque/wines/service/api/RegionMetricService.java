@@ -1,12 +1,12 @@
 package co.edu.unbosque.wines.service.api;
 
-import co.edu.unbosque.wines.entity.RegionMetric;
+import co.edu.unbosque.wines.dto.RegionMetricDTO;
 import java.util.List;
 
 public interface RegionMetricService {
-    List<RegionMetric> findAll();
-    RegionMetric findById(Integer id);
-    RegionMetric save(RegionMetric regionMetric);
+    List<RegionMetricDTO> findAll();
+    RegionMetricDTO findById(Integer id);
+    RegionMetricDTO save(RegionMetricDTO regionMetricDTO);
     void deleteById(Integer id);
-    List<RegionMetric> findByRegionId(Integer regionId);
+    List<RegionMetricDTO> findByRegionId(Integer regionId);
 }
