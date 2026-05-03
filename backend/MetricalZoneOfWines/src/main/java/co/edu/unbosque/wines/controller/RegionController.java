@@ -1,6 +1,6 @@
 package co.edu.unbosque.wines.controller;
 
-import co.edu.unbosque.wines.entity.Region;
+import co.edu.unbosque.wines.dto.RegionDTO;
 import co.edu.unbosque.wines.service.api.RegionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,29 +17,29 @@ public class RegionController {
     private final RegionService regionService;
 
     @GetMapping
-    public ResponseEntity<List<Region>> getAll() {
+    public ResponseEntity<List<RegionDTO>> getAll() {
         return ResponseEntity.ok(regionService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Region> getById(@PathVariable Integer id) {
+    public ResponseEntity<RegionDTO> getById(@PathVariable Integer id) {
         return ResponseEntity.ok(regionService.findById(id));
     }
 
     @GetMapping("/country/{countryId}")
-    public ResponseEntity<List<Region>> getByCountryId(@PathVariable Integer countryId) {
+    public ResponseEntity<List<RegionDTO>> getByCountryId(@PathVariable Integer countryId) {
         return ResponseEntity.ok(regionService.findByCountryId(countryId));
     }
 
     @PostMapping
-    public ResponseEntity<Region> create(@RequestBody Region region) {
-        return new ResponseEntity<>(regionService.save(region), HttpStatus.CREATED);
+    public ResponseEntity<RegionDTO> create(@RequestBody RegionDTO regionDTO) {
+        return new ResponseEntity<>(regionService.save(regionDTO), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Region> update(@PathVariable Integer id, @RequestBody Region region) {
-        region.setId(id);
-        return ResponseEntity.ok(regionService.save(region));
+    public ResponseEntity<RegionDTO> update(@PathVariable Integer id, @RequestBody RegionDTO regionDTO) {
+        regionDTO.setId(id);
+        return ResponseEntity.ok(regionService.save(regionDTO));
     }
 
     @DeleteMapping("/{id}")

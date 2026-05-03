@@ -1,6 +1,6 @@
 package co.edu.unbosque.wines.controller;
 
-import co.edu.unbosque.wines.entity.VineyardMetric;
+import co.edu.unbosque.wines.dto.VineyardMetricDTO;
 import co.edu.unbosque.wines.service.api.VineyardMetricService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,22 +17,22 @@ public class VineyardMetricController {
     private final VineyardMetricService metricService;
 
     @GetMapping
-    public ResponseEntity<List<VineyardMetric>> getAll() {
+    public ResponseEntity<List<VineyardMetricDTO>> getAll() {
         return ResponseEntity.ok(metricService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<VineyardMetric> getById(@PathVariable Integer id) {
+    public ResponseEntity<VineyardMetricDTO> getById(@PathVariable Integer id) {
         return ResponseEntity.ok(metricService.findById(id));
     }
 
     @GetMapping("/vineyard/{vineyardId}")
-    public ResponseEntity<List<VineyardMetric>> getByVineyardId(@PathVariable Integer vineyardId) {
+    public ResponseEntity<List<VineyardMetricDTO>> getByVineyardId(@PathVariable Integer vineyardId) {
         return ResponseEntity.ok(metricService.findByVineyardId(vineyardId));
     }
 
     @PostMapping
-    public ResponseEntity<VineyardMetric> create(@RequestBody VineyardMetric metric) {
+    public ResponseEntity<VineyardMetricDTO> create(@RequestBody VineyardMetricDTO metric) {
         return new ResponseEntity<>(metricService.save(metric), HttpStatus.CREATED);
     }
 

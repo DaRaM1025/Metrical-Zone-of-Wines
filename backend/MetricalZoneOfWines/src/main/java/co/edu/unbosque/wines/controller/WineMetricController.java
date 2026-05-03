@@ -1,6 +1,6 @@
 package co.edu.unbosque.wines.controller;
 
-import co.edu.unbosque.wines.entity.WineMetric;
+import co.edu.unbosque.wines.dto.WineMetricDTO;
 import co.edu.unbosque.wines.service.api.WineMetricService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,23 +17,29 @@ public class WineMetricController {
     private final WineMetricService metricService;
 
     @GetMapping
-    public ResponseEntity<List<WineMetric>> getAll() {
+    public ResponseEntity<List<WineMetricDTO>> getAll() {
         return ResponseEntity.ok(metricService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<WineMetric> getById(@PathVariable Integer id) {
+    public ResponseEntity<WineMetricDTO> getById(@PathVariable Integer id) {
         return ResponseEntity.ok(metricService.findById(id));
     }
 
     @GetMapping("/wine/{wineId}")
-    public ResponseEntity<List<WineMetric>> getByWineId(@PathVariable Integer wineId) {
+    public ResponseEntity<List<WineMetricDTO>> getByWineId(@PathVariable Integer wineId) {
         return ResponseEntity.ok(metricService.findByWineId(wineId));
     }
 
     @PostMapping
-    public ResponseEntity<WineMetric> create(@RequestBody WineMetric metric) {
+    public ResponseEntity<WineMetricDTO> create(@RequestBody WineMetricDTO metric) {
         return new ResponseEntity<>(metricService.save(metric), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<WineMetricDTO> update(@PathVariable Integer id, @RequestBody WineMetricDTO metric) {
+        metric.setId(id);
+        return ResponseEntity.ok(metricService.save(metric));
     }
 
     @DeleteMapping("/{id}")

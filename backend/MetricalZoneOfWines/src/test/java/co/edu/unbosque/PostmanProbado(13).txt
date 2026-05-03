@@ -1,55 +1,55 @@
 ###############################################################################
-
-ACLARACIÓN: POSTMAN PARA PROBAR EN WINES_DB_PROD BASE DE DATOS PRODUCCIÓN
-# GUIA DE PRUEBAS - API METRICAL ZONE OF WINES (MAQUINA VIRTUAL - ALEMANIA)
-# BASE URL: http://52.70.253.172:14080
+ACLARACIÓN: POSTMAN PROBADO EN WINES_DB BASE DE DATOS BORRADOR
+# GUIA DE PRUEBAS - API METRICAL ZONE OF WINES (LOCAL - NUEVA ZELANDA)
+# BASE URL: http://localhost:14080
 ###############################################################################
 
 REGLAS DE ORO ANTES DE PROBAR:
-1. Este script ya tiene los IDs pre-calculados segun el estado actual de la BD
-   en la maquina virtual. Solo disparen en orden del 1 al 9.
+1. Reemplacen los IDs anidados en las relaciones. Si el pais les queda con el id 12,
+   usen ese id en la region, pero revisen que id les da la region para usarlo
+   en el viñedo, y asi sucesivamente.
 2. Lean los comentarios (//) en los JSONs para saber que opciones son validas
    en cada Enum y evitar errores 500 por "Data truncated".
 
 -------------------------------------------------------------------------------
-1. PAISES (Country) -> Deberia quedar con ID 11
+1. PAISES (Country)
 -------------------------------------------------------------------------------
 METODO: POST
 URL: /api/countries
 BODY:
 {
-  "name": "Germany",
-  "code": "DE"
+  "name": "New Zealand",
+  "code": "NZ"
   // OJO: 'code' debe ser exacto de 2 letras y UNICO.
 }
 
 -------------------------------------------------------------------------------
-2. VARIEDAD DE UVA (GrapeVariety) -> Deberia quedar con ID 13
+2. VARIEDAD DE UVA (GrapeVariety)
 -------------------------------------------------------------------------------
 METODO: POST
 URL: /api/grape-varieties
 BODY:
 {
-  "name": "Riesling",
+  "name": "Sauvignon Blanc Exclusive Version",
   "color": "White",
   // Opciones validas para color: 'Red', 'White', 'Rosé'
-  "originCountry": "Germany"
+  "originCountry": "France"
 }
 
 -------------------------------------------------------------------------------
-3. REGIONES (Region) -> Deberia quedar con ID 12
+3. REGIONES (Region)
 -------------------------------------------------------------------------------
 METODO: POST
 URL: /api/regions
 BODY:
 {
-  "name": "Mosel",
-  "description": "Conocida por sus laderas escarpadas y vinos blancos minerales.",
-  "climateType": "Continental",
+  "name": "Marlborough",
+  "description": "Region famosa por sus vinos blancos de clima frio.",
+  "climateType": "Oceanic",
   // Opciones: 'Continental', 'Mediterranean', 'Oceanic', 'Semi-arid', 'Tropical', 'Alpine'
   "wineStyleProfile": "Crisp whites",
   // Opciones: 'Bold reds', 'Crisp whites', 'Elegant reds', 'Sparkling', 'Sweet & dessert', 'Rosé'
-  "country": { "id": 11 }
+  "country": { "id": 13 } // Pongan el ID real de New Zealand
 }
 
 -------------------------------------------------------------------------------
@@ -59,64 +59,64 @@ METODO: POST
 URL: /api/region-metrics
 BODY:
 {
-  "totalVineyards": 85,
-  "totalWines": 400,
-  "totalReviews": 15000,
-  "avgScore": 91.8,
-  "avgPriceUsd": 30.0,
-  "priceRange": "Mid",
+  "totalVineyards": 60,
+  "totalWines": 300,
+  "totalReviews": 12000,
+  "avgScore": 90.5,
+  "avgPriceUsd": 40.0,
+  "priceRange": "Premium",
   // Opciones: 'Budget', 'Mid', 'Premium', 'Luxury'
-  "prestigeIndex": "Acclaimed",
+  "prestigeIndex": "Recognized",
   // Opciones: 'Emerging', 'Recognized', 'Acclaimed', 'Legendary'
-  "medalCount": 20,
-  "region": { "id": 12 }
+  "medalCount": 15,
+  "region": { "id": 13 } // Cambiar por el ID real de Marlborough
 }
 
 -------------------------------------------------------------------------------
-5. VIÑEDOS (Vineyard) -> Deberia quedar con ID 14
+5. VIÑEDOS (Vineyard)
 -------------------------------------------------------------------------------
 METODO: POST
 URL: /api/vineyards
 BODY:
 {
-  "name": "Dr. Loosen",
-  "owner": "Ernst Loosen",
-  "foundedYear": 1800,
-  "hectares": 130.0,
-  "altitudeAvgM": 150,
-  "soilType": "Slate",
+  "name": "Cloudy Bay",
+  "owner": "LVMH",
+  "foundedYear": 1985,
+  "hectares": 250.0,
+  "altitudeAvgM": 20,
+  "soilType": "Gravel",
   // Opciones: 'Clay', 'Sandy', 'Limestone', 'Granite', 'Slate', 'Volcanic', 'Loam', 'Gravel'
-  "irrigationType": "Dry farming",
+  "irrigationType": "Drip",
   // Opciones: 'Drip', 'Flood', 'Sprinkler', 'Dry farming'
   "harvestSeason": "Autumn",
   // Opciones: 'Spring', 'Summer', 'Autumn', 'Winter'
-  "lat": 49.8000,
-  "lng": 7.0000,
-  "region": { "id": 12 }
+  "lat": -41.5111,
+  "lng": 173.8850,
+  "region": { "id": 13 } // Cambiar por el ID real de Marlborough
 }
 
 -------------------------------------------------------------------------------
-6. VINOS (Wine) -> Deberia quedar con ID 16
+6. VINOS (Wine)
 -------------------------------------------------------------------------------
 METODO: POST
 URL: /api/wines
 BODY:
 {
-  "name": "Riesling Kabinett",
-  "vintageYear": 2022,
+  "name": "Te Koko",
+  "vintageYear": 2021,
   "wineType": "White",
   // Opciones: 'Red', 'White', 'Rosé', 'Sparkling', 'Dessert', 'Fortified'
-  "alcoholPct": 8.5,
-  "avgPriceUsd": 25.0,
-  "priceRange": "Mid",
+  "alcoholPct": 13.5,
+  "avgPriceUsd": 60.0,
+  "priceRange": "Premium",
   // Opciones: 'Budget', 'Mid', 'Premium', 'Luxury'
-  "productionBottles": 30000,
-  "agingMonths": 6,
+  "productionBottles": 15000,
+  "agingMonths": 18,
   "agingVessel": "Stainless steel",
   // Opciones: 'French oak', 'American oak', 'Stainless steel', 'Concrete', 'Amphora', 'No aging'
   "naturalWine": false,
-  "description": "Vino blanco ligero, afrutado y refrescante.",
-  "vineyard": { "id": 14 }
+  "description": "Blanco complejo con notas citricas.",
+  "vineyard": { "id": 14 } // Cambiar por el ID real de Cloudy Bay
 }
 
 -------------------------------------------------------------------------------
@@ -126,17 +126,17 @@ METODO: POST
 URL: /api/vineyard-metrics
 BODY:
 {
-  "totalWines": 12,
-  "totalReviews": 6000,
-  "avgScore": 92.5,
-  "avgPriceUsd": 45.0,
-  "priceRange": "Mid",
-  "prestigeIndex": "Acclaimed",
+  "totalWines": 8,
+  "totalReviews": 4500,
+  "avgScore": 92.0,
+  "avgPriceUsd": 75.0,
+  "priceRange": "Premium",
+  "prestigeIndex": "Recognized",
   // Opciones: 'Emerging', 'Recognized', 'Acclaimed', 'Legendary'
-  "medalCount": 8,
+  "medalCount": 10,
   "topWineType": "White",
   // Opciones: 'Red', 'White', 'Rosé', 'Sparkling', 'Dessert', 'Fortified'
-  "vineyard": { "id": 14 }
+  "vineyard": { "id": 14 } // Cambiar por el ID real de Cloudy Bay
 }
 
 -------------------------------------------------------------------------------
@@ -146,8 +146,8 @@ METODO: POST
 URL: /api/wine-grapes
 BODY:
 {
-  "wine": { "id": 16 },
-  "grape": { "id": 13 },
+  "wine": { "id": 14 },  // Pongan el ID del vino Te Koko
+  "grape": { "id": 5 }, // Pongan el ID de la uva Sauvignon Blanc
   "percentage": 100.0
 }
 
@@ -158,15 +158,15 @@ METODO: POST
 URL: /api/wine-metrics
 BODY:
 {
-  "totalReviews": 1100,
-  "avgScore": 93.5,
-  "topScore": 96.0,
-  "avgExpertScore": 95.0,
-  "avgConsumerScore": 92.0,
-  "medalCount": 4,
-  "prestigeIndex": "Acclaimed",
+  "totalReviews": 850,
+  "avgScore": 93.0,
+  "topScore": 95.0,
+  "avgExpertScore": 94.0,
+  "avgConsumerScore": 92.5,
+  "medalCount": 3,
+  "prestigeIndex": "Recognized",
   // Opciones: 'Emerging', 'Recognized', 'Acclaimed', 'Legendary'
-  "wine": { "id": 16 }
+  "wine": { "id": 14 } // Pongan el ID del vino Te Koko
 }
 
 -------------------------------------------------------------------------------
@@ -175,6 +175,6 @@ BODY:
 Manden estos GET sin body para verificar:
 - GET /api/wines
 - GET /api/vineyards
-- GET /api/wine-grapes/wine/16
+- GET /api/wine-grapes/wine/1  // Usen el ID de su vino
 - GET /api/wine-metrics
 ###############################################################################

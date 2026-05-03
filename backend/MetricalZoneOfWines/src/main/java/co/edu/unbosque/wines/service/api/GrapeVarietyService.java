@@ -1,11 +1,11 @@
 package co.edu.unbosque.wines.service.api;
 
-import co.edu.unbosque.wines.entity.GrapeVariety;
+import co.edu.unbosque.wines.dto.GrapeVarietyDTO;
 import java.util.List;
 
 public interface GrapeVarietyService {
-    List<GrapeVariety> findAll();
-    GrapeVariety findById(Integer id);
-    GrapeVariety save(GrapeVariety grapeVariety);
+    List<GrapeVarietyDTO> findAll();
+    GrapeVarietyDTO findById(Integer id);
+    GrapeVarietyDTO save(GrapeVarietyDTO grapeVarietyDTO);
     void deleteById(Integer id);
 }

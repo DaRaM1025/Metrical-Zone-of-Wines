@@ -1,12 +1,12 @@
 package co.edu.unbosque.wines.service.api;
 
-import co.edu.unbosque.wines.entity.WineMetric;
+import co.edu.unbosque.wines.dto.WineMetricDTO;
 import java.util.List;
 
 public interface WineMetricService {
-    List<WineMetric> findAll();
-    WineMetric findById(Integer id);
-    WineMetric save(WineMetric wineMetric);
+    List<WineMetricDTO> findAll();
+    WineMetricDTO findById(Integer id);
+    WineMetricDTO save(WineMetricDTO wineMetricDTO);
     void deleteById(Integer id);
-    List<WineMetric> findByWineId(Integer wineId);
+    List<WineMetricDTO> findByWineId(Integer wineId);
 }

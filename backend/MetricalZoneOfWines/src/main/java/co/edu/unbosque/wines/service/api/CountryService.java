@@ -1,11 +1,11 @@
 package co.edu.unbosque.wines.service.api;
 
-import co.edu.unbosque.wines.entity.Country;
+import co.edu.unbosque.wines.dto.CountryDTO;
 import java.util.List;
 
 public interface CountryService {
-    List<Country> findAll();
-    Country findById(Integer id);
-    Country save(Country country);
+    List<CountryDTO> findAll();
+    CountryDTO findById(Integer id);
+    CountryDTO save(CountryDTO countryDTO);
     void deleteById(Integer id);
 }

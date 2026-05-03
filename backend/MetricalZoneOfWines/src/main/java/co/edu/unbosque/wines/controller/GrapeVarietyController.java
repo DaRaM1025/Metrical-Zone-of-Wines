@@ -1,6 +1,6 @@
 package co.edu.unbosque.wines.controller;
 
-import co.edu.unbosque.wines.entity.GrapeVariety;
+import co.edu.unbosque.wines.dto.GrapeVarietyDTO;
 import co.edu.unbosque.wines.service.api.GrapeVarietyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,24 +17,24 @@ public class GrapeVarietyController {
     private final GrapeVarietyService grapeVarietyService;
 
     @GetMapping
-    public ResponseEntity<List<GrapeVariety>> getAll() {
+    public ResponseEntity<List<GrapeVarietyDTO>> getAll() {
         return ResponseEntity.ok(grapeVarietyService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<GrapeVariety> getById(@PathVariable Integer id) {
+    public ResponseEntity<GrapeVarietyDTO> getById(@PathVariable Integer id) {
         return ResponseEntity.ok(grapeVarietyService.findById(id));
     }
 
     @PostMapping
-    public ResponseEntity<GrapeVariety> create(@RequestBody GrapeVariety grapeVariety) {
-        return new ResponseEntity<>(grapeVarietyService.save(grapeVariety), HttpStatus.CREATED);
+    public ResponseEntity<GrapeVarietyDTO> create(@RequestBody GrapeVarietyDTO grapeVarietyDTO) {
+        return new ResponseEntity<>(grapeVarietyService.save(grapeVarietyDTO), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<GrapeVariety> update(@PathVariable Integer id, @RequestBody GrapeVariety grapeVariety) {
-        grapeVariety.setId(id);
-        return ResponseEntity.ok(grapeVarietyService.save(grapeVariety));
+    public ResponseEntity<GrapeVarietyDTO> update(@PathVariable Integer id, @RequestBody GrapeVarietyDTO grapeVarietyDTO) {
+        grapeVarietyDTO.setId(id);
+        return ResponseEntity.ok(grapeVarietyService.save(grapeVarietyDTO));
     }
 
     @DeleteMapping("/{id}")

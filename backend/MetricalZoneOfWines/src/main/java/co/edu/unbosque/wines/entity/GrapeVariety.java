@@ -2,9 +2,7 @@ package co.edu.unbosque.wines.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 @Table(name = "grape_varieties")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder

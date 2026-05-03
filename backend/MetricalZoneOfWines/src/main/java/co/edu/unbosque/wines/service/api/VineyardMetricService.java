@@ -1,12 +1,12 @@
 package co.edu.unbosque.wines.service.api;
 
-import co.edu.unbosque.wines.entity.VineyardMetric;
+import co.edu.unbosque.wines.dto.VineyardMetricDTO;
 import java.util.List;
 
 public interface VineyardMetricService {
-    List<VineyardMetric> findAll();
-    VineyardMetric findById(Integer id);
-    VineyardMetric save(VineyardMetric vineyardMetric);
+    List<VineyardMetricDTO> findAll();
+    VineyardMetricDTO findById(Integer id);
+    VineyardMetricDTO save(VineyardMetricDTO vineyardMetricDTO);
     void deleteById(Integer id);
-    List<VineyardMetric> findByVineyardId(Integer vineyardId);
+    List<VineyardMetricDTO> findByVineyardId(Integer vineyardId);
 }

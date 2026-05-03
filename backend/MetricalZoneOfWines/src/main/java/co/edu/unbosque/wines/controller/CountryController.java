@@ -1,6 +1,6 @@
 package co.edu.unbosque.wines.controller;
 
-import co.edu.unbosque.wines.entity.Country;
+import co.edu.unbosque.wines.dto.CountryDTO;
 import co.edu.unbosque.wines.service.api.CountryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,24 +17,24 @@ public class CountryController {
     private final CountryService countryService;
 
     @GetMapping
-    public ResponseEntity<List<Country>> getAll() {
+    public ResponseEntity<List<CountryDTO>> getAll() {
         return ResponseEntity.ok(countryService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Country> getById(@PathVariable Integer id) {
+    public ResponseEntity<CountryDTO> getById(@PathVariable Integer id) {
         return ResponseEntity.ok(countryService.findById(id));
     }
 
     @PostMapping
-    public ResponseEntity<Country> create(@RequestBody Country country) {
-        return new ResponseEntity<>(countryService.save(country), HttpStatus.CREATED);
+    public ResponseEntity<CountryDTO> create(@RequestBody CountryDTO countryDTO) {
+        return new ResponseEntity<>(countryService.save(countryDTO), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Country> update(@PathVariable Integer id, @RequestBody Country country) {
-        country.setId(id); // Aseguramos que actualice el que le pasamos por URL
-        return ResponseEntity.ok(countryService.save(country));
+    public ResponseEntity<CountryDTO> update(@PathVariable Integer id, @RequestBody CountryDTO countryDTO) {
+        countryDTO.setId(id);
+        return ResponseEntity.ok(countryService.save(countryDTO));
     }
 
     @DeleteMapping("/{id}")
