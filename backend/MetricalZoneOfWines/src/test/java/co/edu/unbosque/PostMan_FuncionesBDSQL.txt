@@ -1,0 +1,101 @@
+###############################################################################
+# GUIA DE PRUEBAS - API METRICAL ZONE OF WINES (FUNCIONES DE BASE DE DATOS)
+# BASE URL: http://localhost:14080
+###############################################################################
+
+Este archivo contiene las rutas para probar la integracion entre el Backend
+(Spring Boot) y las Funciones Nativas (SQL) de la Base de Datos.
+
+RECOMENDACIONES GENERALES:
+- Todos los metodos de esta seccion son GET.
+- Los endpoints devuelven un JSON estandarizado: { "result": valor }
+- En los endpoints que requieren IDs de base de datos (como vino o viñedo),
+  asegurense de reemplazar el numero por uno que exista en su entorno local.
+  (Se deja el ID 10 como ejemplo funcional base).
+- Si envian un ID que no tiene datos relacionados, el sistema devolvera
+  { "result": null }, lo cual es el comportamiento esperado y controlado.
+
+-------------------------------------------------------------------------------
+1. CALCULO DE RANGO DE PRECIO
+-------------------------------------------------------------------------------
+METODO: GET
+URL: /api/db-functions/price-range?price=85.50
+PROPOSITO: Demuestra la logica de negocio en BD para segmentar precios en
+categorias (Budget, Mid, Premium, Luxury) sin usar condicionales en el backend.
+
+-------------------------------------------------------------------------------
+2. INDICE DE PRESTIGIO
+-------------------------------------------------------------------------------
+METODO: GET
+URL: /api/db-functions/prestige-index?score=93.2
+PROPOSITO: Traduce una calificacion numerica estandar (0-100) a un valor
+cualitativo comercial (Emerging, Recognized, Acclaimed, Legendary).
+
+-------------------------------------------------------------------------------
+3. EDAD DE LA COSECHA (VINTAGE AGE)
+-------------------------------------------------------------------------------
+METODO: GET
+URL: /api/db-functions/vintage-age?year=2015
+PROPOSITO: Muestra el calculo dinamico de años transcurridos usando CURDATE()
+en MySQL, evitando el anti-patron de almacenar edades estaticas en tablas.
+
+-------------------------------------------------------------------------------
+4. UVA DOMINANTE DEL VINO
+-------------------------------------------------------------------------------
+METODO: GET
+URL: /api/db-functions/dominant-grape/10
+PROPOSITO: Ejecuta un query de agregacion interno en SQL (Tabla Pivote) para
+determinar cual es la uva con mayor porcentaje en un blend especifico.
+OJO: Cambiar el '10' por un ID de vino valido.
+
+-------------------------------------------------------------------------------
+5. INGRESOS ESTIMADOS (REVENUE)
+-------------------------------------------------------------------------------
+METODO: GET
+URL: /api/db-functions/estimated-revenue/10
+PROPOSITO: Realiza una proyeccion financiera multiplicando la produccion total
+por el precio promedio a nivel de base de datos, optimizando el uso de RAM.
+OJO: Cambiar el '10' por un ID de vino valido.
+
+-------------------------------------------------------------------------------
+6. EDAD DEL VIÑEDO
+-------------------------------------------------------------------------------
+METODO: GET
+URL: /api/db-functions/vineyard-age?year=1902
+PROPOSITO: Calcula los años de tradicion de un viñedo con base en su año de
+fundacion. Funcion no deterministica que asegura datos actualizados.
+
+-------------------------------------------------------------------------------
+7. FORMATO DE ETIQUETA COMERCIAL
+-------------------------------------------------------------------------------
+METODO: GET
+URL: /api/db-functions/format-label?name=Catena Alta&vintage=2020&alcohol=13.8
+PROPOSITO: Delega a la BD el formateo visual del producto, asegurando que
+todas las plataformas (Web/Movil) muestren el nombre con la misma estructura.
+
+-------------------------------------------------------------------------------
+8. TOTAL DE BOTELLAS POR VIÑEDO
+-------------------------------------------------------------------------------
+METODO: GET
+URL: /api/db-functions/total-bottles/vineyard/2
+PROPOSITO: Ejecuta una funcion de agregacion (SUM) agrupando la produccion
+historica de todos los vinos asociados a un viñedo especifico.
+OJO: Cambiar el '2' por un ID de viñedo valido.
+
+-------------------------------------------------------------------------------
+9. CONVERSION DE HECTAREAS A ACRES
+-------------------------------------------------------------------------------
+METODO: GET
+URL: /api/db-functions/convert-hectares?hectares=150.5
+PROPOSITO: Funcion deterministica de conversion para internacionalizacion
+de metricas, centralizada en la base de datos.
+
+-------------------------------------------------------------------------------
+10. VERIFICACION DE DECANTACION
+-------------------------------------------------------------------------------
+METODO: GET
+URL: /api/db-functions/needs-decanting?type=Red&months=24
+PROPOSITO: Actua como un motor de reglas (Rule Engine) basico en SQL para
+determinar si el vino necesita oxigenacion segun su tipo y meses de crianza.
+Devuelve un booleano mapeado desde un TINYINT(1).
+###############################################################################
