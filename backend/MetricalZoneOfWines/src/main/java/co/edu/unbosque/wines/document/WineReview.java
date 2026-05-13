@@ -33,17 +33,29 @@ public class WineReview {
     // Campos exclusivos de Expert
     private String occupation;
     private String organization;
+
+    @Field("years_experience")
     private Integer yearsExperience;
+
+    @Field("review_year")
     private Integer reviewYear;
 
     // El objeto 'scores' (color, aroma, etc.) lo manejamos como un Map
     private Map<String, Double> scores;
 
+    @Field("tasting_notes")
     private String tastingNotes;
+
+    @Field("pairing_suggestions")
     private String pairingSuggestions;
 
     // Campos exclusivos de Enthusiast
+    @Field("experience_description")
     private String experienceDescription;
+
+    @Field("consumption_occasion")
     private String consumptionOccasion;
+
+    @Field("would_recommend")
     private Boolean wouldRecommend;
 }
