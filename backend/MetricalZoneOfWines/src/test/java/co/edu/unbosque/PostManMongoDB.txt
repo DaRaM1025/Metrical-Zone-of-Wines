@@ -1,0 +1,98 @@
+###############################################################################
+ACLARACIÓN: POSTMAN PROBADO EN WINES_DB (MYSQL) Y WINE_REVIEWS_COL (MONGODB)
+
+GUIA DE PRUEBAS - API ANALÍTICA POLÍGLOTA (RESEÑAS Y MÉTRICAS)
+BASE URL: http://localhost:14080
+###############################################################################
+
+REGLAS DE ORO ANTES DE PROBAR:
+
+Sincronización Automática: Al hacer un POST en las rutas de reviews (Mongo),
+el sistema recalcula y actualiza automáticamente las tablas de métricas en
+MySQL. No necesitan hacer POST manual a las métricas si hay reseñas.
+
+Case Sensitivity en Mongo: El campo 'reviewerType' debe ser "expert" o
+"enthusiast" (todo en minúsculas). El Back-end lo normaliza, pero mejor
+mandarlo así.
+
+Formato de Fechas: Usen formato ISO 8601 (YYYY-MM-DDTHH:mm:ssZ).
+
+RESEÑAS DE VINOS (WineReview - MongoDB)
+
+METODO: POST
+URL: /api/wine-reviews
+BODY (Ejemplo Entusiasta):
+{
+"wineId": 1, // Usar un ID de vino real de MySQL
+"reviewerType": "enthusiast",
+"reviewerName": "Santiago Choco",
+"scoreOverall": 94.0,
+"comments": "Todo un elixir, excelente balance de taninos.",
+"experienceDescription": "Cata nocturna en casa.",
+"wouldRecommend": true
+}
+
+BODY (Ejemplo Experto):
+{
+"wineId": 1,
+"reviewerType": "expert",
+"reviewerName": "Juan Sommelier",
+"scoreOverall": 98.0,
+"occupation": "Crítico Gastronómico",
+"organization": "Wine Spectator",
+"yearsExperience": 10,
+"tastingNotes": "Notas profundas de roble francés y frutos negros.",
+"pairingSuggestions": "Carnes rojas maduradas."
+}
+
+// EFECTO EN MYSQL (wine_metrics):
+// - Actualiza total_reviews, avg_score y top_score.
+// - Segmenta promedios en avg_expert_score y avg_consumer_score.
+// - Recalcula medal_count (Score >= 97 -> 3 medallas).
+// - Actualiza prestige_index basado en el promedio real.
+
+RESEÑAS DE VIÑEDOS (VineyardReview - MongoDB)
+
+METODO: POST
+URL: /api/vineyard-reviews
+BODY:
+{
+"vineyardId": 1, // ID real de un viñedo en MySQL
+"reviewerType": "enthusiast",
+"reviewerName": "Nico",
+"scoreOverall": 90.0,
+"visitDate": "2026-05-12T14:00:00Z",
+// OJO: Si no mandan visitDate, el Back pone la fecha de hoy por defecto.
+"comments": "El recorrido por las cavas es de otro nivel."
+}
+
+// EFECTO EN MYSQL (vineyard_metrics):
+// - Sincroniza métricas de reseñas (total_reviews, promedios segmentados).
+// - ACTUALIZACIÓN TÉCNICA: El sistema hace un barrido de los vinos del viñedo
+//   para actualizar total_wines, avg_aging_months y top_wine_type.
+
+CONSULTAS DE VERIFICACIÓN (GET)
+
+Manden estos GET para ver la sincronización:
+
+Ver reseñas en MongoDB
+GET /api/wine-reviews
+
+GET /api/wine-reviews/wine/1
+
+GET /api/vineyard-reviews
+
+Ver impacto en MySQL (Deberían estar actualizados tras los POST de arriba)
+GET /api/wine-metrics
+
+GET /api/vineyard-metrics/vineyard/1
+
+###############################################################################
+NOTAS PARA EL FRONT:
+
+El campo 'submittedAt' y 'reviewYear' se generan solos en el servidor.
+
+Si MongoDB devuelve error 500 (WriteError code 121), revisen que el JSON
+tenga todos los campos obligatorios del esquema (reviewer_name, vineyard_id, etc.).
+###############################################################################
+
