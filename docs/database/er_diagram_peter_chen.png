@@ -1,0 +1,6 @@
+![Peter Chen ER Diagram]
+
+Placeholder for Peter Chen notation ER diagram showing:
+- Entities: Wineries, Regions, Wines, Reviews, Users
+- Relationships with cardinalities
+- Attributes and keys
