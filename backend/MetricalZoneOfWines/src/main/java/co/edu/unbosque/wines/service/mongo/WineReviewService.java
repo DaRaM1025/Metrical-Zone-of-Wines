@@ -6,6 +6,8 @@ import co.edu.unbosque.wines.repository.mongo.WineReviewRepository;
 import co.edu.unbosque.wines.entity.Wine;
 import co.edu.unbosque.wines.entity.WineMetric;
 import co.edu.unbosque.wines.repository.WineMetricRepository;
+import co.edu.unbosque.wines.service.api.RegionMetricService;
+import co.edu.unbosque.wines.repository.WineRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
@@ -26,6 +28,8 @@ public class WineReviewService {
     private final WineReviewRepository mongoRepository;
     private final MongoTemplate mongoTemplate;
     private final WineMetricRepository mysqlMetricRepository;
+    private final RegionMetricService regionMetricService;
+    private final WineRepository wineRepository;
 
     public List<WineReview> findAll() {
         return mongoRepository.findAll();
@@ -119,6 +123,11 @@ public class WineReviewService {
                 }
 
                 mysqlMetricRepository.save(metricsSql);
+                // Disparar la actualización en cascada hacia la Región
+                Wine wine = wineRepository.findById(wineId).orElse(null);
+                if (wine != null && wine.getVineyard() != null) {
+                    regionMetricService.syncRegionMetrics(wine.getVineyard().getRegion().getId());
+                }
                 System.out.println("Sincronizacion exitosa en MySQL - Vino ID: " + wineId);
             }
         } catch (Exception e) {

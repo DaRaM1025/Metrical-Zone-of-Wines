@@ -6,7 +6,10 @@ import java.util.List;
 public interface RegionMetricService {
     List<RegionMetricDTO> findAll();
     RegionMetricDTO findById(Integer id);
+    List<RegionMetricDTO> findByRegionId(Integer regionId);
     RegionMetricDTO save(RegionMetricDTO regionMetricDTO);
     void deleteById(Integer id);
-    List<RegionMetricDTO> findByRegionId(Integer regionId);
+
+
+    void syncRegionMetrics(Integer regionId);
 }
