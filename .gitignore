@@ -13,6 +13,20 @@ dist-ssr
 *.swp
 *.swo
 *~
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
 
 # Editor directories and files
 !.vscode/extensions.json
@@ -39,6 +53,8 @@ lerna-debug.log*
 # Environment
 .env
 .env.*
+.env.prod
+app.pid
 application-local.yml
 
 # Build
@@ -54,3 +70,4 @@ out/
 
 # Ansible
 *.retry
+

@@ -1,0 +1,180 @@
+###############################################################################
+
+ACLARACIÓN: POSTMAN PARA PROBAR EN WINES_DB_PROD BASE DE DATOS PRODUCCIÓN
+# GUIA DE PRUEBAS - API METRICAL ZONE OF WINES (MAQUINA VIRTUAL - ALEMANIA)
+# BASE URL: http://52.70.253.172:14080
+###############################################################################
+
+REGLAS DE ORO ANTES DE PROBAR:
+1. Este script ya tiene los IDs pre-calculados segun el estado actual de la BD
+   en la maquina virtual. Solo disparen en orden del 1 al 9.
+2. Lean los comentarios (//) en los JSONs para saber que opciones son validas
+   en cada Enum y evitar errores 500 por "Data truncated".
+
+-------------------------------------------------------------------------------
+1. PAISES (Country) -> Deberia quedar con ID 11
+-------------------------------------------------------------------------------
+METODO: POST
+URL: /api/countries
+BODY:
+{
+  "name": "Germany",
+  "code": "DE"
+  // OJO: 'code' debe ser exacto de 2 letras y UNICO.
+}
+
+-------------------------------------------------------------------------------
+2. VARIEDAD DE UVA (GrapeVariety) -> Deberia quedar con ID 13
+-------------------------------------------------------------------------------
+METODO: POST
+URL: /api/grape-varieties
+BODY:
+{
+  "name": "Riesling",
+  "color": "White",
+  // Opciones validas para color: 'Red', 'White', 'Rosé'
+  "originCountry": "Germany"
+}
+
+-------------------------------------------------------------------------------
+3. REGIONES (Region) -> Deberia quedar con ID 12
+-------------------------------------------------------------------------------
+METODO: POST
+URL: /api/regions
+BODY:
+{
+  "name": "Mosel",
+  "description": "Conocida por sus laderas escarpadas y vinos blancos minerales.",
+  "climateType": "Continental",
+  // Opciones: 'Continental', 'Mediterranean', 'Oceanic', 'Semi-arid', 'Tropical', 'Alpine'
+  "wineStyleProfile": "Crisp whites",
+  // Opciones: 'Bold reds', 'Crisp whites', 'Elegant reds', 'Sparkling', 'Sweet & dessert', 'Rosé'
+  "country": { "id": 11 }
+}
+
+-------------------------------------------------------------------------------
+4. METRICAS DE REGION (RegionMetric)
+-------------------------------------------------------------------------------
+METODO: POST
+URL: /api/region-metrics
+BODY:
+{
+  "totalVineyards": 85,
+  "totalWines": 400,
+  "totalReviews": 15000,
+  "avgScore": 91.8,
+  "avgPriceUsd": 30.0,
+  "priceRange": "Mid",
+  // Opciones: 'Budget', 'Mid', 'Premium', 'Luxury'
+  "prestigeIndex": "Acclaimed",
+  // Opciones: 'Emerging', 'Recognized', 'Acclaimed', 'Legendary'
+  "medalCount": 20,
+  "region": { "id": 12 }
+}
+
+-------------------------------------------------------------------------------
+5. VIÑEDOS (Vineyard) -> Deberia quedar con ID 14
+-------------------------------------------------------------------------------
+METODO: POST
+URL: /api/vineyards
+BODY:
+{
+  "name": "Dr. Loosen",
+  "owner": "Ernst Loosen",
+  "foundedYear": 1800,
+  "hectares": 130.0,
+  "altitudeAvgM": 150,
+  "soilType": "Slate",
+  // Opciones: 'Clay', 'Sandy', 'Limestone', 'Granite', 'Slate', 'Volcanic', 'Loam', 'Gravel'
+  "irrigationType": "Dry farming",
+  // Opciones: 'Drip', 'Flood', 'Sprinkler', 'Dry farming'
+  "harvestSeason": "Autumn",
+  // Opciones: 'Spring', 'Summer', 'Autumn', 'Winter'
+  "lat": 49.8000,
+  "lng": 7.0000,
+  "region": { "id": 12 }
+}
+
+-------------------------------------------------------------------------------
+6. VINOS (Wine) -> Deberia quedar con ID 16
+-------------------------------------------------------------------------------
+METODO: POST
+URL: /api/wines
+BODY:
+{
+  "name": "Riesling Kabinett",
+  "vintageYear": 2022,
+  "wineType": "White",
+  // Opciones: 'Red', 'White', 'Rosé', 'Sparkling', 'Dessert', 'Fortified'
+  "alcoholPct": 8.5,
+  "avgPriceUsd": 25.0,
+  "priceRange": "Mid",
+  // Opciones: 'Budget', 'Mid', 'Premium', 'Luxury'
+  "productionBottles": 30000,
+  "agingMonths": 6,
+  "agingVessel": "Stainless steel",
+  // Opciones: 'French oak', 'American oak', 'Stainless steel', 'Concrete', 'Amphora', 'No aging'
+  "naturalWine": false,
+  "description": "Vino blanco ligero, afrutado y refrescante.",
+  "vineyard": { "id": 14 }
+}
+
+-------------------------------------------------------------------------------
+7. METRICAS DE VIÑEDO (VineyardMetric)
+-------------------------------------------------------------------------------
+METODO: POST
+URL: /api/vineyard-metrics
+BODY:
+{
+  "totalWines": 12,
+  "totalReviews": 6000,
+  "avgScore": 92.5,
+  "avgPriceUsd": 45.0,
+  "priceRange": "Mid",
+  "prestigeIndex": "Acclaimed",
+  // Opciones: 'Emerging', 'Recognized', 'Acclaimed', 'Legendary'
+  "medalCount": 8,
+  "topWineType": "White",
+  // Opciones: 'Red', 'White', 'Rosé', 'Sparkling', 'Dessert', 'Fortified'
+  "vineyard": { "id": 14 }
+}
+
+-------------------------------------------------------------------------------
+8. MEZCLA DE UVAS (WineGrape - Tabla Pivote)
+-------------------------------------------------------------------------------
+METODO: POST
+URL: /api/wine-grapes
+BODY:
+{
+  "wine": { "id": 16 },
+  "grape": { "id": 13 },
+  "percentage": 100.0
+}
+
+-------------------------------------------------------------------------------
+9. METRICAS DE VINO (WineMetric)
+-------------------------------------------------------------------------------
+METODO: POST
+URL: /api/wine-metrics
+BODY:
+{
+  "totalReviews": 1100,
+  "avgScore": 93.5,
+  "topScore": 96.0,
+  "avgExpertScore": 95.0,
+  "avgConsumerScore": 92.0,
+  "medalCount": 4,
+  "prestigeIndex": "Acclaimed",
+  // Opciones: 'Emerging', 'Recognized', 'Acclaimed', 'Legendary'
+  "wine": { "id": 16 }
+}
+
+-------------------------------------------------------------------------------
+10. CONSULTAS (GET)
+-------------------------------------------------------------------------------
+Manden estos GET sin body para verificar:
+- GET /api/wines
+- GET /api/vineyards
+- GET /api/wine-grapes/wine/16
+- GET /api/wine-metrics
+###############################################################################
