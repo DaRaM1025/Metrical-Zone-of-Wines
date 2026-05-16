@@ -58,4 +58,8 @@ public class Wine {
 
     @Column(columnDefinition = "TEXT")
     private String description;
+
+    // Agrégale esto al final de tus otros atributos en Wine.java
+    @OneToMany(mappedBy = "wine", fetch = FetchType.LAZY)
+    private java.util.List<WineGrape> wineGrapes;
 }

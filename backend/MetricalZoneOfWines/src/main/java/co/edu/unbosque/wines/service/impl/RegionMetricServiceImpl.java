@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,30 +25,24 @@ public class RegionMetricServiceImpl implements RegionMetricService {
 
     @Override
     public List<RegionMetricDTO> findAll() {
-        return metricRepository.findAll().stream()
-                .map(this::toDTO)
-                .collect(Collectors.toList());
+        return metricRepository.findAll().stream().map(this::toDTO).collect(Collectors.toList());
     }
 
     @Override
     public RegionMetricDTO findById(Integer id) {
-        RegionMetric metric = metricRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Métrica de región no encontrada"));
+        RegionMetric metric = metricRepository.findById(id).orElseThrow(() -> new RuntimeException("No encontrada"));
         return toDTO(metric);
     }
 
     @Override
     public List<RegionMetricDTO> findByRegionId(Integer regionId) {
-        return metricRepository.findByRegionId(regionId).stream()
-                .map(this::toDTO)
-                .collect(Collectors.toList());
+        return metricRepository.findByRegionId(regionId).map(metric -> List.of(toDTO(metric))).orElse(List.of());
     }
 
     @Override
     public RegionMetricDTO save(RegionMetricDTO regionMetricDTO) {
         RegionMetric metric = toEntity(regionMetricDTO);
-        RegionMetric savedMetric = metricRepository.save(metric);
-        return toDTO(savedMetric);
+        return toDTO(metricRepository.save(metric));
     }
 
     @Override
@@ -55,63 +50,86 @@ public class RegionMetricServiceImpl implements RegionMetricService {
         metricRepository.deleteById(id);
     }
 
-    // --- MAPPERS ---
+    @Override
+    public void syncRegionMetrics(Integer regionId) {
+        // Quitamos el try-catch para que si falla, el error se vea claro y la transacción aborte bien
+        RegionMetricRepository.RegionAggregatedStats stats = metricRepository.getAggregatedStatsByRegion(regionId);
+        Integer dominantGrapeId = metricRepository.getDominantGrapeByRegion(regionId);
+        Integer bestVintage = metricRepository.getBestVintageByRegion(regionId);
+
+        RegionMetric metric = metricRepository.findByRegionId(regionId)
+                .orElse(RegionMetric.builder().region(Region.builder().id(regionId).build()).build());
+
+        metric.setTotalVineyards(stats.getTotalVineyards() != null ? stats.getTotalVineyards() : 0);
+        metric.setTotalWines(stats.getTotalWines() != null ? stats.getTotalWines() : 0);
+        metric.setTotalReviews(stats.getTotalReviews() != null ? stats.getTotalReviews() : 0);
+        metric.setAvgScore(toBigDecimal(stats.getAvgScore()));
+        metric.setTopScore(toBigDecimal(stats.getTopScore()));
+        metric.setAvgExpertScore(toBigDecimal(stats.getAvgExpertScore()));
+        metric.setAvgConsumerScore(toBigDecimal(stats.getAvgConsumerScore()));
+        metric.setAvgPriceUsd(toBigDecimal(stats.getAvgPrice()));
+        metric.setMedalCount(stats.getMedalCount() != null ? stats.getMedalCount() : 0);
+
+        if (dominantGrapeId != null) {
+            metric.setDominantGrape(GrapeVariety.builder().id(dominantGrapeId).build());
+        }
+        metric.setBestVintageYear(bestVintage);
+        metric.setPriceRange(determinePriceRange(stats.getAvgPrice()));
+        metric.setPrestigeIndex(determinePrestigeIndex(stats.getAvgScore()));
+
+        metricRepository.save(metric);
+    }
+
+    private BigDecimal toBigDecimal(Double value) {
+        return value != null ? BigDecimal.valueOf(value) : null;
+    }
+
+    private String determinePrestigeIndex(Double avgScore) {
+        if (avgScore == null) return "Emerging";
+        if (avgScore >= 94.00) return "Legendary";
+        if (avgScore >= 88.00) return "Acclaimed";
+        if (avgScore >= 82.00) return "Recognized";
+        return "Emerging";
+    }
+
+    private String determinePriceRange(Double avgPrice) {
+        if (avgPrice == null || avgPrice == 0.0) return null;
+        if (avgPrice <= 20.00) return "Budget";
+        if (avgPrice <= 50.00) return "Mid"; // <--- SINCRONIZADO CON DDL
+        if (avgPrice <= 150.00) return "Premium";
+        return "Luxury";
+    }
+
+    // [Mappers toDTO y toEntity se mantienen igual...]
     private RegionMetricDTO toDTO(RegionMetric entity) {
         if (entity == null) return null;
-
         return RegionMetricDTO.builder()
                 .id(entity.getId())
-                .computedAt(entity.getComputedAt())
                 .totalVineyards(entity.getTotalVineyards())
                 .totalWines(entity.getTotalWines())
                 .totalReviews(entity.getTotalReviews())
                 .avgScore(entity.getAvgScore())
                 .topScore(entity.getTopScore())
-                .avgExpertScore(entity.getAvgExpertScore())
-                .avgConsumerScore(entity.getAvgConsumerScore())
                 .avgPriceUsd(entity.getAvgPriceUsd())
                 .priceRange(entity.getPriceRange())
-                .bestVintageYear(entity.getBestVintageYear())
                 .prestigeIndex(entity.getPrestigeIndex())
                 .medalCount(entity.getMedalCount())
-                // Mapeo manual rápido para evitar dependencias circulares
-                .region(entity.getRegion() != null ? RegionDTO.builder()
-                                                     .id(entity.getRegion().getId())
-                                                     .name(entity.getRegion().getName())
-                                                     .build() : null)
-                .dominantGrape(entity.getDominantGrape() != null ? GrapeVarietyDTO.builder()
-                                                                   .id(entity.getDominantGrape().getId())
-                                                                   .name(entity.getDominantGrape().getName())
-                                                                   .build() : null)
                 .build();
     }
 
     private RegionMetric toEntity(RegionMetricDTO dto) {
         if (dto == null) return null;
-
-        RegionMetric metric = RegionMetric.builder()
+        return RegionMetric.builder()
                 .id(dto.getId())
                 .totalVineyards(dto.getTotalVineyards())
                 .totalWines(dto.getTotalWines())
                 .totalReviews(dto.getTotalReviews())
                 .avgScore(dto.getAvgScore())
                 .topScore(dto.getTopScore())
-                .avgExpertScore(dto.getAvgExpertScore())
-                .avgConsumerScore(dto.getAvgConsumerScore())
                 .avgPriceUsd(dto.getAvgPriceUsd())
                 .priceRange(dto.getPriceRange())
-                .bestVintageYear(dto.getBestVintageYear())
                 .prestigeIndex(dto.getPrestigeIndex())
                 .medalCount(dto.getMedalCount())
                 .build();
-
-        if (dto.getRegion() != null) {
-            metric.setRegion(Region.builder().id(dto.getRegion().getId()).build());
-        }
-        if (dto.getDominantGrape() != null) {
-            metric.setDominantGrape(GrapeVariety.builder().id(dto.getDominantGrape().getId()).build());
-        }
-
-        return metric;
     }
 }
