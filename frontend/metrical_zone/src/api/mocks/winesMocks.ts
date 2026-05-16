@@ -1,0 +1,62 @@
+import type { Wine} from '@/api/types';
+
+export const mockWines: Wine[] = [
+  {
+    id: 10001,
+    vineyard_id: 1001,
+    name: 'Château Margaux Grand Vin',
+    vintage_year: 2015,
+    wine_type: 'Red',
+    alcohol_pct: 13.5,
+    avg_price_usd: 650,
+    price_range: 'Luxury',
+    production_bottles: 12000,
+    aging_months: 24,
+    aging_vessel: 'French oak',
+    natural_wine: false,
+    tasting_notes: 'Blackcurrant, cedar, violets, silky tannins.',
+    food_pairing: 'Lamb, beef, game birds.',
+    label_image_url: 'https://example.com/margaux2015.jpg',
+    description: 'Flagship wine of Château Margaux.',
+  },
+  {
+    id: 10002,
+    vineyard_id: 1001,
+    name: 'Pavillon Rouge du Château Margaux',
+    vintage_year: 2016,
+    wine_type: 'Red',
+    alcohol_pct: 13.0,
+    avg_price_usd: 180,
+    price_range: 'Premium',
+    production_bottles: 24000,
+    aging_months: 18,
+    aging_vessel: 'French oak',
+    natural_wine: false,
+    tasting_notes: 'Red fruits, spices, elegant.',
+    food_pairing: 'Roasted meats, cheese.',
+    label_image_url: null,
+    description: 'Second wine of Château Margaux.',
+  },
+  {
+    id: 10003,
+    vineyard_id: 1003,
+    name: 'Marqués de Riscal Reserva',
+    vintage_year: 2014,
+    wine_type: 'Red',
+    alcohol_pct: 14.0,
+    avg_price_usd: 25,
+    price_range: 'Mid',
+    production_bottles: 200000,
+    aging_months: 18,
+    aging_vessel: 'American oak',
+    natural_wine: false,
+    tasting_notes: 'Vanilla, red berries, tobacco.',
+    food_pairing: 'Tapas, grilled meats.',
+    label_image_url: null,
+    description: 'Classic Rioja from a historic estate.',
+  },
+] satisfies Wine[];
+
+export const mockWineById: Record<number, Wine> = Object.fromEntries(
+  mockWines.map(w => [w.id, w])
+);
